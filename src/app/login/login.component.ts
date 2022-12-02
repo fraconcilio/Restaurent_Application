@@ -19,25 +19,20 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  logIn() {
-    //console.log(this.loginForm.value);
-    this._http.get<any>('http://localhost:3000/signup').subscribe(
-      (res) => {
-        const user= res.find((a:any)=>{
-          return a.email === this.loginForm.value.email && a.password === this.loginForm.value.password;
-        });
-         if (user) {
-          alert(user.name + ' logged in successfully');
-          this._router.navigate(['/restaurent']);
-          this.loginForm.reset();
-         } else {
-          alert("Invalid credentials");
-         }
-        }, err=>{
-          console.log(err);
-        })
+  logIn(){
+    this._http.post<any>('http://localhost:8080/login',this.loginForm.value).subscribe(res=>{
+      if(res.status == 200){
+        alert('Login Successfully');
       }
-    
+      else if(res.status == 401){
+        alert('Login Error');
+      }
+    }), (err: any)=>{
+      console.log(err);
+      alert('Request Error');
+    }
   }
+      
+ }
 
 
